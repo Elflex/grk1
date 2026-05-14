@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Spin &amp; Win Cash | JazzCash</title>
+    <link href="https://fonts.googleapis.com/css2?family=Oxygen:wght@400;700&amp;display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #ffcc00; /* Changed to yellow accent */
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Oxygen', system-ui, sans-serif;
+            background: #0a0a0a;
+            color: #ffffff;
+            overflow-x: hidden;
+            line-height: 1.5;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 480px;
+            margin: 0 auto;
+            padding: 0 16px;
+        }
+        
+        header {
+            padding: 12px 0;
+            text-align: center;
+            border-bottom: 1px solid #222;
+        }
+        
+        .jazzcash-header {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            color: #aaa;
+            background: rgba(255,255,255,0.05);
+            padding: 6px 16px;
+            border-radius: 30px;
+        }
+        
+        .hero {
+            text-align: center;
+            padding: 32px 0 20px;
+        }
+        
+        .hero h1 {
+            font-size: 2.8rem;
+            font-weight: 700;
+            color: #ffffff; /* Pure white */
+            margin-bottom: 8px;
+            line-height: 1.1;
+        }
+        
+        .hero .sub {
+            font-size: 1.35rem;
+            color: #ddd;
+            margin-bottom: 16px;
+        }
+        
+        .hero .main {
+            font-size: 2.4rem;
+            font-weight: 700;
+            color: #ffcc00; /* Yellow for SPIN & WIN */
+            text-shadow: 0 0 30px rgba(255, 204, 0, 0.8);
+            margin: 16px 0;
+            line-height: 1;
+        }
+        
+        .hero .support {
+            font-size: 1.1rem;
+            color: #bbb;
+            max-width: 320px;
+            margin: 0 auto 24px;
+        }
+        
+        .social-proof-top {
+            background: rgba(255,255,255,0.06);
+            padding: 12px;
+            border-radius: 12px;
+            margin-bottom: 24px;
+            text-align: center;
+            font-size: 0.95rem;
+            color: #ffcc00;
+        }
+        
+        .wheel-container {
+            position: relative;
+            width: 100%;
+            max-width: 320px;
+            margin: 0 auto 30px;
+            padding: 20px;
+        }
+        
+        #wheel {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            box-shadow: 0 0 40px rgba(255, 204, 0, 0.5),
+                        inset 0 0 30px rgba(255,255,255,0.3);
+            transition: transform 4.5s cubic-bezier(0.17, 0.67, 0.12, 0.99);
+        }
+        
+        .pointer {
+            position: absolute;
+            top: 18px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 22px solid transparent;
+            border-right: 22px solid transparent;
+            border-bottom: 42px solid #fff;
+            z-index: 10;
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.6));
+        }
+        
+        .pointer::after {
+            content: '';
+            position: absolute;
+            top: 8px;
+            left: -12px;
+            width: 24px;
+            height: 24px;
+            background: #000;
+            border-radius: 50%;
+        }
+        
+        .spin-btn {
+            display: block;
+            width: 100%;
+            max-width: 280px;
+            margin: 20px auto;
+            padding: 18px 40px;
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #000;
+            background: linear-gradient(90deg, #ffcc00, #ffaa00);
+            border: none;
+            border-radius: 60px;
+            box-shadow: 0 0 30px rgba(255, 204, 0, 0.8),
+                        0 10px 20px rgba(0,0,0,0.4);
+            cursor: pointer;
+            transition: all 0.2s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .spin-btn:active {
+            transform: scale(0.95);
+            box-shadow: 0 0 25px rgba(255, 204, 0, 1);
+        }
+        
+        .glow {
+            animation: glow-pulse 2s infinite alternate;
+        }
+        
+        @keyframes glow-pulse {
+            from { box-shadow: 0 0 20px rgba(255, 204, 0, 0.6); }
+            to { box-shadow: 0 0 45px rgba(255, 204, 0, 1); }
+        }
+        
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.94);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 20px;
+        }
+        
+        .modal-content {
+            background: #111;
+            border-radius: 20px;
+            padding: 32px 24px;
+            text-align: center;
+            max-width: 380px;
+            width: 100%;
+            border: 2px solid var(--primary);
+            box-shadow: 0 0 50px rgba(255, 204, 0, 0.5);
+        }
+        
+        .win-amount {
+            font-size: 3rem;
+            font-weight: 700;
+            color: #ffcc00;
+            margin: 16px 0;
+        }
+        
+        .cta-btn {
+            background: #ffcc00;
+            color: #000;
+            border: none;
+            padding: 16px 40px;
+            font-size: 1.3rem;
+            font-weight: 700;
+            border-radius: 50px;
+            margin: 20px 0 12px;
+            width: 100%;
+        }
+        
+        .small-btns {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+        }
+        
+        .small-btn {
+            flex: 1;
+            padding: 14px;
+            font-size: 1.1rem;
+            border-radius: 50px;
+        }
+        
+        .yes-btn {
+            background: #ffcc00;
+            color: #000;
+        }
+        
+        .no-btn {
+            background: #333;
+            color: #fff;
+        }
+        
+        .live-bar {
+            background: rgba(255,255,255,0.08);
+            padding: 10px 16px;
+            border-radius: 9999px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9rem;
+            margin: 20px 0;
+        }
+        
+        .testimonial {
+            background: #111;
+            padding: 16px;
+            border-radius: 16px;
+            margin: 16px 0;
+            font-size: 0.95rem;
+            border-left: 4px solid var(--primary);
+        }
+        
+        .sponsors {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 24px;
+            flex-wrap: wrap;
+            padding: 24px 0;
+            opacity: 0.7;
+        }
+        
+        .particle {
+            position: absolute;
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 1;
+            animation: floatParticle 18s linear infinite;
+        }
+        
+        @keyframes floatParticle {
+            0% { transform: translateY(100vh) rotate(0deg); opacity: 0.9; }
+            100% { transform: translateY(-150px) rotate(720deg); opacity: 0; }
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 30px 0 40px;
+            font-size: 0.8rem;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <!-- Background particles container -->
+    <div id="particles" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; opacity: 0.25;"></div>
+
+    <div class="container" style="position: relative; z-index: 2;">
+        <!-- Header -->
+        <header>
+            <div class="jazzcash-header">
+                <span style="color:#ffcc00;">◉</span>
+                <strong>JazzCash</strong>
+            </div>
+        </header>
+
+        <!-- Hero -->
+        <div class="hero">
+            <h1>Congratulations!</h1>
+            <p class="sub">You are among the lucky winners</p>
+            <div class="main">SPIN &amp; WIN CASH</div>
+            <p class="support">Spin the wheel to win up to <strong>Rs 100,000</strong></p>
+            
+            <div class="social-proof-top" id="today-claims">
+                2,341 people have claimed rewards today
+            </div>
+        </div>
+
+        <!-- Wheel Section -->
+        <div class="wheel-container">
+            <div style="position: relative;">
+                <canvas id="wheel" width="320" height="320"></canvas>
+                <div class="pointer"></div>
+            </div>
+        </div>
+
+        <button id="spinBtn" class="spin-btn glow">TAP TO SPIN</button>
+
+        <!-- Live Stats -->
+        <div class="live-bar">
+            <div>
+                <span id="viewers">1,392</span> viewing now
+            </div>
+            <div style="color: #ffcc00;">
+                <span id="recent-wins">31</span> winners this hour
+            </div>
+        </div>
+
+        <!-- Scarcity -->
+        <div style="text-align:center; color:#ff4444; font-weight:700; margin:12px 0; font-size:1.05rem;">
+            ⚠️ Only 16 rewards left today!
+        </div>
+
+        <!-- Testimonials -->
+        <div style="margin: 32px 0;">
+            <h3 style="text-align:center; margin-bottom:16px; color:#aaa;">Recent Winners</h3>
+            <div id="testimonials"></div>
+        </div>
+
+        <!-- Comment box -->
+        <div style="background:#111; padding:16px; border-radius:16px; margin-bottom:40px;">
+            <p style="font-size:0.9rem; color:#888; margin-bottom:8px;">Share your win with others</p>
+            <div style="display:flex; gap:8px;">
+                <input type="text" id="commentInput" placeholder="Write a comment...." 
+                       style="flex:1; background:#222; border:none; padding:14px; border-radius:30px; color:white;">
+                <button onclick="postComment()" 
+                        style="background:#ffcc00; color:black; border:none; padding:0 24px; border-radius:30px; font-weight:700;">Post</button>
+            </div>
+            <div id="comments" style="margin-top:16px; max-height:220px; overflow-y:auto; font-size:0.9rem;"></div>
+        </div>
+
+        <!-- Sponsors -->
+       <div class="sponsors">
+            <p style="font-size:1.05rem; font-weight:700; color:#ffcc00; margin-right:10px;">Sponsored by</p>
+            <img src="https://www.pngwing.com/en/free-png-aaspv" alt="JazzCash" class="sponsor-logo">
+            <img src="https://banner2.cleanpng.com/lnd/20250110/sj/acded9d6362d497965c18a071cb9fd.webp" alt="EasyPaisa" class="sponsor-logo">
+            <img src="https://d2liqplnt17rh6.cloudfront.net/coverImages/tapmadnewcoveer_e663773d-773b-41f7-a3cb-e896ad99fa55-686.jpeg" alt="Tapmad" class="sponsor-logo">
+        </div>
+    </div>
+
+    <!-- Win Modal -->
+    <div id="winModal" class="modal">
+        <div class="modal-content">
+            <h2 style="color:#ffcc00; font-size:1.8rem;">🎉 JACKPOT!</h2>
+            <div id="winMessage" style="margin:20px 0; font-size:1.1rem; line-height:1.4;"></div>
+            <div class="win-amount">Rs 100,000</div>
+            
+            <button onclick="claimReward()" class="cta-btn">CLAIM NOW</button>
+            
+            <div class="small-btns">
+                <button onclick="chooseYes()" class="small-btn yes-btn">YES, I WANT IT</button>
+                <button onclick="chooseNo()" class="small-btn no-btn">MAYBE LATER</button>
+            </div>
+            
+            <p style="margin-top:24px; font-size:0.85rem; color:#777;">
+                Your reward is reserved for the next 5 minutes
+            </p>
+        </div>
+    </div>
+
+    <!-- Final Step Modal -->
+    <div id="finalModal" class="modal">
+        <div class="modal-content">
+            <h2 style="color:#ffcc00;">Almost There!</h2>
+            <p style="margin:24px 0; font-size:1.1rem;">Complete the last step to get your Rs 100,000 reward</p>
+            <button onclick="redirectToOffer()" 
+                    style="background:#ffcc00; color:#000; width:100%; padding:18px; border:none; border-radius:50px; font-size:1.2rem; font-weight:700;">
+                CONTINUE TO CLAIM
+            </button>
+        </div>
+    </div>
+
+    <div class="footer">
+        © 2026 JazzCash Rewards • All rights reserved<br>
+        This is a promotional game. Terms apply.
+    </div>
+
+    <script>
+        // Config
+        const OFFER_LINK = "https://example.com/cpa-offer?source=spinwin"; // Replace with your real CPA link
+        let isSpinning = false;
+        
+        // More testimonials
+        const testimonialsData = [
+            { name: "Ahmed R.", text: "I just got Rs 70,000 in my JazzCash! Thank you!", time: "2m ago" },
+            { name: "Saba Khan", text: "Won Rs 50,000 instantly. Super easy!", time: "11m ago" },
+            { name: "Bilal M.", text: "Rs 100,000 landed in my account. Life changing!", time: "27m ago" },
+            { name: "Fatima Z.", text: "This is real! Got my money within minutes.", time: "41m ago" },
+            { name: "Usman Tariq", text: "Best spin ever. Rs 100k credited!", time: "1h ago" }
+        ];
+        
+        let userComments = [];
+        
+        // Canvas setup
+        let canvas, ctx, rotation = 0;
+        const segments = 8;
+        const segmentAngle = 360 / segments;
+        
+        // All segments use white/ash tones + one strong yellow for winning segment
+        const prizes = [
+            { text: "Rs 100,000", color: "#ffcc00", icon: "💰" },   // Winning segment (index 0)
+            { text: "Rs 70,000", color: "#aaaaaa", icon: "💵" },
+            { text: "Rs 50,000", color: "#888888", icon: "🏦" },
+            { text: "Try Again", color: "#444444", icon: "🔄" },
+            { text: "Rs 100,000", color: "#ffcc00", icon: "💰" },   // Duplicate winning
+            { text: "Retry", color: "#555555", icon: "🔁" },
+            { text: "X", color: "#333333", icon: "✕" },
+            { text: "Rs 50,000", color: "#777777", icon: "🏦" }
+        ];
+        
+        function drawWheel() {
+            canvas = document.getElementById("wheel");
+            ctx = canvas.getContext("2d");
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2;
+            const radius = 150;
+            
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            for (let i = 0; i < segments; i++) {
+                const startAngle = (i * segmentAngle) * (Math.PI / 180) + (rotation * Math.PI / 180);
+                const endAngle = ((i + 1) * segmentAngle) * (Math.PI / 180) + (rotation * Math.PI / 180);
+                
+                ctx.beginPath();
+                ctx.moveTo(centerX, centerY);
+                ctx.arc(centerX, centerY, radius, startAngle, endAngle);
+                ctx.closePath();
+                ctx.fillStyle = prizes[i].color;
+                ctx.fill();
+                
+                ctx.strokeStyle = "#222";
+                ctx.lineWidth = 5;
+                ctx.stroke();
+                
+                const midAngle = startAngle + (endAngle - startAngle) / 2;
+                const textX = centerX + Math.cos(midAngle) * (radius * 0.65);
+                const textY = centerY + Math.sin(midAngle) * (radius * 0.65);
+                
+                ctx.save();
+                ctx.translate(textX, textY);
+                ctx.rotate(midAngle + Math.PI / 2);
+                
+                ctx.fillStyle = i === 0 || i === 4 ? "#000" : "#ffffff";
+                ctx.font = "bold 15px Oxygen";
+                ctx.textAlign = "center";
+                ctx.fillText(prizes[i].icon, 0, -18);
+                ctx.fillText(prizes[i].text, 0, 10);
+                ctx.restore();
+            }
+            
+            // Center
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, 38, 0, Math.PI * 2);
+            ctx.fillStyle = "#000000";
+            ctx.fill();
+            ctx.strokeStyle = "#ffcc00";
+            ctx.lineWidth = 10;
+            ctx.stroke();
+            
+            ctx.fillStyle = "#fff";
+            ctx.font = "32px Arial";
+            ctx.textAlign = "center";
+            ctx.fillText("🎁", centerX, centerY + 12);
+        }
+        
+        function spinWheel() {
+            if (isSpinning) return;
+            isSpinning = true;
+            
+            const spinBtn = document.getElementById("spinBtn");
+            spinBtn.textContent = "SPINNING...";
+            spinBtn.style.opacity = "0.7";
+            
+            // FORCE Rs 100,000 (segments 0 or 4)
+            const winningSegment = Math.random() > 0.5 ? 0 : 4;
+            const extraSpins = 8;
+            const targetAngle = (360 * extraSpins) + (winningSegment * segmentAngle) + (segmentAngle / 2) + 90;
+            
+            const targetRotation = rotation + targetAngle + (Math.random() * 6 - 3);
+            
+            canvas.style.transition = "transform 5200ms cubic-bezier(0.25, 0.1, 0.25, 1)";
+            canvas.style.transform = `rotate(${targetRotation}deg)`;
+            
+            setTimeout(() => {
+                rotation = targetRotation % 360;
+                canvas.style.transition = "none";
+                canvas.style.transform = `rotate(${rotation}deg)`;
+                
+                triggerConfetti();
+                showWinModal();
+                
+                isSpinning = false;
+                spinBtn.textContent = "SPIN AGAIN";
+                spinBtn.style.opacity = "1";
+            }, 5300);
+        }
+        
+        function triggerConfetti() {
+            const colors = ['#ffcc00', '#ffffff', '#ffaa00', '#ffff88'];
+            for (let i = 0; i < 150; i++) {
+                setTimeout(() => {
+                    const confetti = document.createElement('div');
+                    confetti.style.position = 'fixed';
+                    confetti.style.left = Math.random() * 100 + 'vw';
+                    confetti.style.top = '-20px';
+                    confetti.style.width = Math.random() * 10 + 6 + 'px';
+                    confetti.style.height = confetti.style.width;
+                    confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                    confetti.style.borderRadius = '50%';
+                    confetti.style.zIndex = '999';
+                    document.body.appendChild(confetti);
+                    
+                    const duration = Math.random() * 3500 + 2500;
+                    confetti.animate([
+                        { transform: 'translateY(0) rotate(0deg)', opacity: 1 },
+                        { transform: `translateY(${window.innerHeight + 150}px) rotate(${Math.random() * 1500}deg)`, opacity: 0 }
+                    ], { duration: duration, easing: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)' });
+                    
+                    setTimeout(() => confetti.remove(), duration);
+                }, i * 1.5);
+            }
+        }
+        
+        function showWinModal() {
+            const modal = document.getElementById("winModal");
+            const device = /Mobi|Android/i.test(navigator.userAgent) ? "Mobile" : "Desktop";
+            const browser = navigator.userAgent.includes("Chrome") ? "Chrome" : "Browser";
+            
+            document.getElementById("winMessage").innerHTML = `
+                Congratulations <strong>${browser}</strong> user from Pakistan using <strong>${device}</strong>!<br>
+                <strong>You have won Rs 100,000!</strong>
+            `;
+            modal.style.display = "flex";
+        }
+        
+        function claimReward() {
+            document.getElementById("winModal").style.display = "none";
+            setTimeout(() => redirectToOffer(), 300);
+        }
+        
+        function chooseYes() {
+            document.getElementById("winModal").style.display = "none";
+            redirectToOffer();
+        }
+        
+        function chooseNo() {
+            document.getElementById("winModal").style.display = "none";
+            setTimeout(() => {
+                document.getElementById("finalModal").style.display = "flex";
+            }, 500);
+        }
+        
+        function redirectToOffer() {
+            document.getElementById("finalModal").style.display = "none";
+            window.location.href = OFFER_LINK;
+        }
+        
+        // Fluctuating live counters
+        function updateLiveCounters() {
+            let viewers = 1392;
+            let wins = 31;
+            
+            setInterval(() => {
+                const change = Math.floor(Math.random() * 13) - 6; // can go up or down
+                viewers = Math.max(1280, Math.min(1680, viewers + change));
+                document.getElementById("viewers").textContent = viewers.toLocaleString();
+                
+                if (Math.random() > 0.65) {
+                    wins += Math.floor(Math.random() * 2) + 1;
+                    document.getElementById("recent-wins").textContent = wins;
+                }
+            }, 2800);
+            
+            // Claims counter
+            let claims = 2341;
+            setInterval(() => {
+                claims += Math.floor(Math.random() * 5) + 2;
+                document.getElementById("today-claims").textContent = 
+                    `${claims.toLocaleString()} people have claimed rewards today`;
+            }, 9200);
+        }
+        
+        function renderTestimonials() {
+            const container = document.getElementById("testimonials");
+            container.innerHTML = "";
+            testimonialsData.forEach(t => {
+                const div = document.createElement("div");
+                div.className = "testimonial";
+                div.innerHTML = `
+                    <strong>${t.name}</strong> <span style="color:#666; font-size:0.8rem;">${t.time}</span><br>
+                    ${t.text}
+                `;
+                container.appendChild(div);
+            });
+        }
+        
+        function postComment() {
+            const input = document.getElementById("commentInput");
+            if (!input.value.trim()) return;
+            
+            const commentHTML = `
+                <div style="background:#1a1a1a; padding:12px; border-radius:12px; margin-bottom:10px;">
+                    <strong>You</strong> <span style="color:#ffcc00; font-size:0.75rem;">just now</span><br>
+                    ${input.value}
+                </div>
+            `;
+            const commentsDiv = document.getElementById("comments");
+            commentsDiv.innerHTML = commentHTML + commentsDiv.innerHTML;
+            input.value = "";
+        }
+        
+        // Random colored floating particles
+        function createParticles() {
+            const container = document.getElementById("particles");
+            for (let i = 0; i < 45; i++) {
+                const p = document.createElement("div");
+                p.className = "particle";
+                p.style.left = Math.random() * 100 + "vw";
+                p.style.background = `hsl(${Math.random()*360}, 85%, 65%)`;
+                p.style.animationDuration = (Math.random() * 25 + 16) + "s";
+                p.style.animationDelay = "-" + (Math.random() * 30) + "s";
+                p.style.opacity = Math.random() * 0.6 + 0.3;
+                p.style.width = Math.random() * 8 + 5 + "px";
+                p.style.height = p.style.width;
+                container.appendChild(p);
+            }
+        }
+        
+        function init() {
+            drawWheel();
+            document.getElementById("spinBtn").addEventListener("click", spinWheel);
+            renderTestimonials();
+            updateLiveCounters();
+            createParticles();
+            
+            console.log("%c✅ Updated Spin & Win Page Loaded", "color:#ffcc00; font-size:14px;");
+        }
+        
+        window.onload = init;
+    </script>
+</body>
+</html>
